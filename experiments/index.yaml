@@ -1,0 +1,4 @@
+templates:
+  - templateID: cpu_throttling
+    backend: chaos-mesh
+    path: StressChaos/CPU_Throttling.yaml
