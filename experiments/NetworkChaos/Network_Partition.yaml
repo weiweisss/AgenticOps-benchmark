@@ -1,0 +1,20 @@
+apiVersion: chaos-mesh.org/v1alpha1
+kind: NetworkChaos
+metadata:
+  name: {{ metadata.name }}
+  namespace: {{ metadata.namespace }}
+
+spec:
+  action: partition
+  mode: all
+  selector:
+{{ spec.selector | to_yaml | indent(4, true) }}
+
+  direction: {{ spec.direction }}
+
+  target:
+    mode: all
+    selector:
+{{ spec.target.selector | to_yaml | indent(6, true) }}
+
+  duration: "300h"

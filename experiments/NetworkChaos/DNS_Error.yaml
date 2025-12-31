@@ -1,0 +1,12 @@
+apiVersion: chaos-mesh.org/v1alpha1
+kind: DNSChaos
+metadata:
+  name: {{ metadata.name }}
+  namespace: {{ metadata.namespace }}
+
+spec:
+  mode: all
+  selector:
+{{ spec.selector | to_yaml | indent(4, true) }}
+  action: error
+  duration: "300h"

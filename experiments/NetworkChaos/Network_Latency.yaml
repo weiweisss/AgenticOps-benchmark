@@ -1,0 +1,22 @@
+apiVersion: chaos-mesh.org/v1alpha1
+kind: NetworkChaos
+metadata:
+  name: {{ metadata.name }}
+  namespace: {{ metadata.namespace }}
+
+spec:
+  action: netem
+  mode: one
+  selector:
+{{ spec.selector | to_yaml | indent(4, true) }}
+
+  delay:
+    latency: "{{ spec.delay.latency }}"
+    correlation: {{ spec.delay.correlation }}
+    jitter: "{{ spec.delay.jitter }}"
+
+  loss:
+    loss: {{ spec.loss.loss }}
+    correlation: {{ spec.loss.correlation }}
+
+  duration: "300h"

@@ -1,7 +1,7 @@
 templates:
   - templateID: cpu_throttling
     backend: chaos-mesh
-    path: StressChaos/CPU_Throttling.yaml
+    path: StressChaos/Abrupt_CPU_Throttling.yaml
   - templateID: abrupt_memory_leak
     backend: chaos-mesh
     path: StressChaos/Abrupt_Memory_Leak.yaml
@@ -11,3 +11,15 @@ templates:
   - templateID: disk_full
     backend: chaosd
     path: Chaosd/Disk_Full.txt
+  - templateID: network_partition
+    backend: chaos-mesh
+    path: NetworkChaos/Network_Partition.yaml
+  - templateID: network_latency
+    backend: chaos-mesh
+    path: NetworkChaos/Network_Latency.yaml
+  - templateID: dns_error
+    backend: chaos-mesh
+    path: NetworkChaos/DNS_Error.yaml
+  - templateID: dns_random
+    backend: chaos-mesh
+    path: NetworkChaos/DNS_Random.yaml
