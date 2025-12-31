@@ -4,6 +4,7 @@ from register import TEMPLATE_REGISTRY, EXPERIMENTS_DIR
 from jinja2 import Environment, FileSystemLoader
 import subprocess
 import yaml
+import shlex
 
 @dataclass
 class FaultRequest:
@@ -11,7 +12,7 @@ class FaultRequest:
     metadata: dict[str, str]  # name, namespace, etc.
     spec: dict[str, Any]      # concrete parameters (selector, duration, etc.)
 
-def router(templateID: str, metadata: dict[str, str], *, spec: dict[str, Any]) -> FaultRequest:
+def router(templateID: str, metadata: dict[str, str]|None = None, *, spec: dict[str, Any]) -> FaultRequest:
     """
     Constructs a normalized FaultRequest from user-specified inputs.
 
@@ -39,6 +40,8 @@ def router(templateID: str, metadata: dict[str, str], *, spec: dict[str, Any]) -
             semantic information needed for downstream template resolution and
             backend execution.
     """
+    if metadata is None:
+        metadata = {}
     if metadata.get("name") is None:
         metadata["name"] = f"{templateID.replace('/', '-')}-instance"
     if metadata.get("namespace") is None:
@@ -103,27 +106,34 @@ def inject(request: FaultRequest) -> None:
         )
 
     elif template.backend == "chaosd":
-        pass
+        env = Environment(
+            loader=FileSystemLoader(str(EXPERIMENTS_DIR)),
+            trim_blocks=True,
+            lstrip_blocks=True,
+        )
+
+        cmd_tmpl = env.get_template(template.template_path)
+        rendered_cmd = cmd_tmpl.render(
+            metadata=request.metadata,
+            spec=request.spec,
+        ).strip()
+        subprocess.run(
+            shlex.split(rendered_cmd),
+            check=True,
+        )
 
     elif template.backend == "custom":
         pass
 
 def main():
     req = router(
-        templateID="cpu_throttling",
-        metadata={
-            "name": "test-cpu-throttling",
-            "namespace": "default",
-        },
-        spec={
-            "selector": {
-                "pods": {
-                    "liuhe": 
-                    ["liuhe-demo-job-vsr96-worker-0"]
-                }
-            }
-        }
-    )
+    templateID="disk_full",
+    spec={
+        "fallocate": "/data/fill.file",
+        "path": "/data",
+        "percent": 50,
+    },
+)
     inject(req)
 
 if __name__ == "__main__":

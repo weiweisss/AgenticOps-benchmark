@@ -1,0 +1,65 @@
+apiVersion: chaos-mesh.org/v1alpha1
+kind: Workflow
+metadata:
+  name: {{ metadata.name }}
+  namespace: {{ metadata.namespace }}
+
+spec:
+  entry: the-entry
+  templates:
+    - name: the-entry
+      templateType: Serial
+      deadline: "300h"
+      children:
+        - memory-leak-step1
+        - memory-leak-step2
+        - memory-leak-step3
+        - memory-leak-step4
+
+    - name: memory-leak-step1
+      templateType: StressChaos
+      deadline: "20s"
+      stressChaos:
+        mode: one
+        selector:
+{{ spec.selector | to_yaml | indent(10, true) }}
+        stressors:
+          memory:
+            workers: 1
+            size: "200MB"
+
+    - name: memory-leak-step2
+      templateType: StressChaos
+      deadline: "20s"
+      stressChaos:
+        mode: one
+        selector:
+{{ spec.selector | to_yaml | indent(10, true) }}
+        stressors:
+          memory:
+            workers: 1
+            size: "400MB"
+
+    - name: memory-leak-step3
+      templateType: StressChaos
+      deadline: "20s"
+      stressChaos:
+        mode: one
+        selector:
+{{ spec.selector | to_yaml | indent(10, true) }}
+        stressors:
+          memory:
+            workers: 1
+            size: "600MB"
+
+    - name: memory-leak-step4
+      templateType: StressChaos
+      deadline: "300h"
+      stressChaos:
+        mode: one
+        selector:
+{{ spec.selector | to_yaml | indent(10, true) }}
+        stressors:
+          memory:
+            workers: 1
+            size: "800MB"

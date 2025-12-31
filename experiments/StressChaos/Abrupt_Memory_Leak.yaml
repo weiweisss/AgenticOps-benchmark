@@ -1,0 +1,15 @@
+apiVersion: chaos-mesh.org/v1alpha1
+kind: StressChaos
+metadata:
+  name: {{ metadata.name }}
+  namespace: {{ metadata.namespace }}
+
+spec:
+  mode: one
+  selector:
+{{ spec.selector | to_yaml | indent(4, true) }}
+  stressors:
+    memory:
+      workers: 4
+      size: "900MB"
+  duration: "300h"

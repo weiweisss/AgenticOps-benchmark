@@ -10,6 +10,6 @@ spec:
 {{ spec.selector | to_yaml | indent(4, true) }}
   stressors:
     cpu:
-      workers: 1
+      workers: 4
       load: 100
   duration: "300h"

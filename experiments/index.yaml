@@ -2,3 +2,12 @@ templates:
   - templateID: cpu_throttling
     backend: chaos-mesh
     path: StressChaos/CPU_Throttling.yaml
+  - templateID: abrupt_memory_leak
+    backend: chaos-mesh
+    path: StressChaos/Abrupt_Memory_Leak.yaml
+  - templateID: stepwise_memory_leak
+    backend: chaos-mesh
+    path: StressChaos/Stepwise_Memory_Leak.yaml
+  - templateID: disk_full
+    backend: chaosd
+    path: Chaosd/Disk_Full.txt
